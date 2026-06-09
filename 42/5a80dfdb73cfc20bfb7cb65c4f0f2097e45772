@@ -1,0 +1,70 @@
+lib/game/types.ts
+  s_12bef40d669687::t_d525a0ca21e3ab 65-66
+  s_12bef40d669687::t_1bc9499aae943d 8-10
+lib/game/save.ts
+  s_12bef40d669687::t_f406e55e8ddcfd 30-31
+  s_12bef40d669687::t_6b8458548c8aad 60-61
+  s_12bef40d669687::t_96b8f41ec72fcb 3
+  s_12bef40d669687::t_5d482c1a9c951d 13-14
+lib/db/init.ts
+  s_12bef40d669687::t_5a5d2df7f00e32 1,5-71
+  s_12bef40d669687::t_224abfef0c643e 2-4,72-82
+app/api/agent/register/route.ts
+  s_12bef40d669687::t_c030f16e7742cc 44
+  s_12bef40d669687::t_920f7a895fde77 54-55
+  s_12bef40d669687::t_8e88a3a1ca4074 3
+lib/game/world.ts
+  s_12bef40d669687::t_b1f4f58a4ea5c8 8-28,37,41-42,44,46-47,60-61,63,65-73,79,81-82,84,86-87,100-101,108,116-118,123-126,128-148,150,152,155,160,163,167-168,171,180
+  s_12bef40d669687::t_170f1758a177e8 149,151,153-154,156-159,161-162,164-166,169-170,172-175
+lib/game/render.ts
+  s_12bef40d669687::t_4cb5df24046061 28-30,33-34,36-37
+  s_12bef40d669687::t_0c2e4827a82288 35,38
+app/api/leaderboard/route.ts
+  s_12bef40d669687::t_bf78514350c6a6 3,6,10
+components/game/Game.tsx
+  s_12bef40d669687::t_213723c3517443 134-136,180
+  s_12bef40d669687::t_ceae4628f7f434 29-30,35
+app/api/player/score/route.ts
+  s_12bef40d669687::t_4068c8650ca7be 21
+  s_12bef40d669687::t_8ff9e5ef3fdddd 26,28-29,37
+  s_12bef40d669687::t_574be07cf1c3e8 3
+components/game/HUD.tsx
+  s_12bef40d669687::t_f1c16f6fc586a7 23,28,31,34-35,37,43,48,51,55-70,72-79,83-84,86-92,94-96,105,128,140-141,144,146
+app/api/airdrop/route.ts
+  s_12bef40d669687::t_21c280adf97103 12
+  s_12bef40d669687::t_85c45941267887 33
+  s_12bef40d669687::t_1cff0edc588481 3
+app/api/profile/route.ts
+  s_12bef40d669687::t_4b8640e5b8cc1d 3
+  s_12bef40d669687::t_6dbc4ec009fb67 16
+vercel.json
+  s_12bef40d669687::t_67e45ea1cb3b0d 3
+app/api/payment/verify/route.ts
+  s_12bef40d669687::t_00b02c8fc95c91 25
+  s_12bef40d669687::t_65512cbf9266b4 55-68
+  s_12bef40d669687::t_97485c3d20ae46 4
+app/api/agent/score/route.ts
+  s_12bef40d669687::t_a319077053ca65 34
+  s_12bef40d669687::t_ae31a100f9f171 3
+  s_12bef40d669687::t_99ac03af0c58f2 51,53-54,62
+lib/game/engine.ts
+  s_12bef40d669687::t_06eb45c6d52373 32-33,39-40,302-303,341-387,396,422-423,429-430
+  s_12bef40d669687::t_87b630759be24e 101-102,104-106
+  s_12bef40d669687::t_f7702506463ad6 74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "425a80dfdb73cfc20bfb7cb65c4f0f2097e45772",
+  "prompts": {},
+  "sessions": {
+    "s_12bef40d669687": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccda2605-4eb8-4aef-ad49-06072580e7cc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "KAINOVA Bot <kainova-bot@local>"
+    }
+  }
+}
