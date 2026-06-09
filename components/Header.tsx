@@ -29,6 +29,15 @@ export function Header() {
           <Link href="/play" className="hover:text-white">
             Play
           </Link>
+          <Link href="/leaderboard" className="hover:text-white">
+            Leaderboard
+          </Link>
+          <Link href="/dashboard" className="hover:text-white">
+            Dashboard
+          </Link>
+          <Link href="/agents" className="hover:text-white">
+            Agents
+          </Link>
         </nav>
         <div className="flex-1" />
         <WalletButton />

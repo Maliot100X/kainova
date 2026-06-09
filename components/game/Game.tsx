@@ -5,6 +5,7 @@ import { Engine, HUDSnapshot } from "@/lib/game/engine";
 import { screenToTile, TILE_H, TILE_W, tileToScreen } from "@/lib/game/iso";
 import { render, type Camera } from "@/lib/game/render";
 import { clearSave } from "@/lib/game/save";
+import { useWallet } from "@/lib/wallet";
 import { HUD } from "./HUD";
 
 export function Game() {
@@ -12,6 +13,28 @@ export function Game() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const engineRef = useRef<Engine | null>(null);
   const [hud, setHud] = useState<HUDSnapshot | null>(null);
+  const { address } = useWallet();
+
+  useEffect(() => {
+    if (!address) return;
+    const id = setInterval(() => {
+      const w = engineRef.current?.world;
+      if (!w) return;
+      fetch("/api/player/score", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          wallet: address,
+          gold: w.player.gold,
+          kills: 0,
+          resources: w.player.inventory.reduce((s, it) => s + it.count, 0),
+          combat_skill: w.player.skills.combat,
+          gather_skill: w.player.skills.gathering,
+        }),
+      }).catch(() => {});
+    }, 30_000);
+    return () => clearInterval(id);
+  }, [address]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
