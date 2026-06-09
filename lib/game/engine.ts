@@ -91,7 +91,7 @@ function tryAttackMob(world: WorldState, m: MobEntity, now: number) {
   }
   if (now - m.lastHitAt < PLAYER_ATTACK_COOLDOWN_MS) return;
   m.lastHitAt = now;
-  const damage = 10 + Math.floor(world.player.skills.combat * 1.5);
+  const damage = 10 + Math.floor((world.player.skills.combat + world.player.equipBonuses.combat) * 1.5);
   m.hp -= damage;
   world.player.busyKind = "attack";
   world.player.busyUntil = now + PLAYER_ATTACK_COOLDOWN_MS;
@@ -336,6 +336,17 @@ export class Engine {
       tryAttackMob(this.world, m, now);
       if ((m.state as MobEntity["state"]) === "dead") this.pendingAction = null;
     }
+  }
+
+  setPlayerSkin(emoji: string) {
+    this.world.player.skin = emoji;
+  }
+
+  setEquipmentBonuses(bonuses: { combat: number; maxHp: number; gathering: number }) {
+    this.world.player.equipBonuses = { ...bonuses };
+    this.world.player.maxHp = this.world.player.baseMaxHp + bonuses.maxHp;
+    this.world.player.hp = Math.min(this.world.player.hp, this.world.player.maxHp);
+    this.emitHud();
   }
 
   toggleAgentMode() {

@@ -61,6 +61,7 @@ export type PlayerState = {
   facing: "n" | "s" | "e" | "w";
   hp: number;
   maxHp: number;
+  baseMaxHp: number;
   gold: number;
   kills: number;
   resourcesGathered: number;
@@ -68,6 +69,8 @@ export type PlayerState = {
   hotbar: (ItemKind | null)[]; // length 6
   selectedSlot: number;
   skills: { gathering: number; combat: number; fishing: number };
+  equipBonuses: { combat: number; maxHp: number; gathering: number };
+  skin: string;
   path: TilePos[];
   walkProgress: number;
   busyUntil: number;

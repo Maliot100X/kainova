@@ -185,7 +185,7 @@ export function render(
       drawHpBar(ctx, sx, sy - 28 * camera.zoom, d.e.hp, d.e.maxHp);
     } else {
       const { sx, sy } = tileToScreen(d.px, d.py, camera.cx, camera.cy, camera.zoom);
-      drawSprite(ctx, sx, sy + 4, SPRITE_EMOJI.player, 40 * camera.zoom);
+      drawSprite(ctx, sx, sy + 4, world.player.skin || SPRITE_EMOJI.player, 40 * camera.zoom);
     }
   }
 

@@ -207,12 +207,15 @@ export function Game() {
         {hud && (
           <HUD
             snap={hud}
+            wallet={address ?? null}
             onSelectSlot={(i) => engineRef.current?.selectSlot(i)}
             onToggleAgent={() => engineRef.current?.toggleAgentMode()}
             onReset={() => {
               clearSave();
               window.location.reload();
             }}
+            onEquipSkin={(emoji) => engineRef.current?.setPlayerSkin(emoji)}
+            onEquipStats={(bonuses) => engineRef.current?.setEquipmentBonuses(bonuses)}
           />
         )}
       </div>

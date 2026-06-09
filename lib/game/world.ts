@@ -78,7 +78,7 @@ function defaultPlayer(): PlayerState {
   return {
     tx: 14, ty: 15, px: 14, py: 15,
     facing: "s",
-    hp: 100, maxHp: 100,
+    hp: 100, maxHp: 100, baseMaxHp: 100,
     gold: 0, kills: 0, resourcesGathered: 0,
     inventory: [
       { kind: "axe",     count: 1 },
@@ -89,6 +89,8 @@ function defaultPlayer(): PlayerState {
     hotbar: ["axe", "pickaxe", "rod", "sword", null, null],
     selectedSlot: 0,
     skills: { gathering: 1, combat: 1, fishing: 1 },
+    equipBonuses: { combat: 0, maxHp: 0, gathering: 0 },
+    skin: "🧙",
     path: [],
     walkProgress: 0,
     busyUntil: 0,
