@@ -29,11 +29,15 @@ export type HUDSnapshot = {
   hp: number;
   maxHp: number;
   gold: number;
+  kills: number;
+  resources: number;
   inventory: { kind: ItemKind; count: number }[];
   hotbar: (ItemKind | null)[];
   selectedSlot: number;
   realm: string;
   online: number;
+  agentMode: boolean;
+  skills: { gathering: number; combat: number; fishing: number };
 };
 
 function addItem(world: WorldState, kind: ItemKind, count: number) {
@@ -67,6 +71,7 @@ function tryAttackResource(world: WorldState, r: ResourceEntity, now: number) {
     if (r.kind === "coal") addItem(world, "coal", 1);
     if (r.kind === "pond") addItem(world, "fish", 1);
     world.player.skills.gathering += r.kind === "coal" ? 2 : 1;
+    world.player.resourcesGathered += 1;
     if (r.kind !== "pond") {
       r.respawnAt = now + RESOURCE_RESPAWN_MS;
       r.hp = r.maxHp;
@@ -93,10 +98,12 @@ function tryAttackMob(world: WorldState, m: MobEntity, now: number) {
   if (m.hp <= 0) {
     m.state = "dead";
     m.respawnAt = now + MOB_RESPAWN_MS;
-    const drop = 5 + Math.floor(Math.random() * 11);
+    const tier = m.maxHp >= 200 ? 8 : m.maxHp >= 100 ? 4 : m.maxHp >= 50 ? 2 : 1;
+    const drop = (5 + Math.floor(Math.random() * 11)) * tier;
     world.player.gold += drop;
-    world.player.skills.combat += 1;
-    toast(world, `+${drop} gold`);
+    world.player.skills.combat += tier;
+    world.player.kills += 1;
+    toast(world, `+${drop} gold · ${m.kind} slain`);
   }
 }
 
@@ -292,6 +299,8 @@ export class Engine {
   }
 
   private pendingAction: { type: "gather" | "attack"; targetId: number } | null = null;
+  agentMode = false;
+  private agentCooldown = 0;
 
   private maybeRunPendingAction(now: number) {
     if (!this.pendingAction) return;
@@ -329,6 +338,53 @@ export class Engine {
     }
   }
 
+  toggleAgentMode() {
+    this.agentMode = !this.agentMode;
+    toast(this.world, this.agentMode ? "Agent AI enabled — auto-farming!" : "Agent AI disabled");
+    this.emitHud();
+  }
+
+  private stepAgent(now: number) {
+    // Don't interrupt an ongoing action
+    if (this.world.player.busyUntil > now) return;
+    if (this.world.player.path.length > 0) return;
+    if (this.pendingAction) return;
+
+    const px = this.world.player.tx;
+    const py = this.world.player.ty;
+
+    // Equip sword if mobs are nearby, otherwise prefer gathering
+    const nearMob = this.world.mobs
+      .filter((m) => m.state !== "dead")
+      .map((m) => ({ m, d: chebyshev(m.tx, m.ty, px, py) }))
+      .filter(({ d }) => d <= 8)
+      .sort((a, b) => a.d - b.d)[0];
+
+    if (nearMob && nearMob.d <= 6) {
+      // equip sword
+      const swordSlot = this.world.player.hotbar.indexOf("sword");
+      if (swordSlot >= 0) this.world.player.selectedSlot = swordSlot;
+      this.moveTo(nearMob.m.tx, nearMob.m.ty);
+      return;
+    }
+
+    // Find nearest harvestable resource and equip correct tool
+    const nearRes = this.world.resources
+      .filter((r) => r.respawnAt === null)
+      .map((r) => ({ r, d: chebyshev(r.tx, r.ty, px, py) }))
+      .sort((a, b) => a.d - b.d)[0];
+
+    if (nearRes) {
+      const toolMap: Record<string, ItemKind> = {
+        tree: "axe", rock: "pickaxe", coal: "pickaxe", pond: "rod",
+      };
+      const tool = toolMap[nearRes.r.kind];
+      const slot = this.world.player.hotbar.indexOf(tool);
+      if (slot >= 0) this.world.player.selectedSlot = slot;
+      this.moveTo(nearRes.r.tx, nearRes.r.ty);
+    }
+  }
+
   start() {
     const tick = (t: number) => {
       const dt = Math.min(64, t - this.lastTime);
@@ -337,6 +393,7 @@ export class Engine {
       stepResources(this.world, now);
       stepMobs(this.world, now, dt);
       stepPlayer(this.world, now, dt);
+      if (this.agentMode) this.stepAgent(now);
       this.maybeRunPendingAction(now);
       this.saveTimer += dt;
       if (this.saveTimer > SAVE_INTERVAL_MS) {
@@ -362,11 +419,15 @@ export class Engine {
       hp: Math.round(this.world.player.hp),
       maxHp: this.world.player.maxHp,
       gold: this.world.player.gold,
+      kills: this.world.player.kills,
+      resources: this.world.player.resourcesGathered,
       inventory: [...this.world.player.inventory],
       hotbar: [...this.world.player.hotbar],
       selectedSlot: this.world.player.selectedSlot,
       realm: this.world.realm,
       online: this.fakeOnline,
+      agentMode: this.agentMode,
+      skills: { ...this.world.player.skills },
     });
   }
 }

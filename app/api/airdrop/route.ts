@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db/client";
+import { ensureSchema } from "@/lib/db/init";
 
 export const runtime = "nodejs";
 
@@ -8,6 +9,7 @@ const TOP_PRIZE_POOL = 1_000_000;
 const TOP_PRIZE_SPLIT = [500_000, 300_000, 200_000];
 
 export async function GET() {
+  await ensureSchema();
   const top = await sql`
     SELECT actor_wallet, display_name, actor_kind FROM scores
     ORDER BY score_total DESC LIMIT 10
@@ -28,6 +30,7 @@ export async function POST(req: Request) {
   if (auth !== process.env.AGENT_API_SECRET) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
+  await ensureSchema();
   const top = await sql`
     SELECT actor_wallet, score_total FROM scores
     ORDER BY score_total DESC LIMIT 10

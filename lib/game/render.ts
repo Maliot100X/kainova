@@ -25,8 +25,17 @@ const SPRITE_EMOJI: Record<string, string> = {
   coal: "⬛",
   pond: "💧",
   wolf: "🐺",
+  boar: "🐗",
+  goblin: "👺",
+  zombie: "🧟",
   skeleton: "💀",
   bandit: "🥷",
+  archer: "🏹",
+  troll: "👾",
+  orc: "👹",
+  necromancer: "🧙‍♂️",
+  demon: "😈",
+  dragon: "🐉",
   player: "🧙",
 };
 

@@ -5,7 +5,9 @@ export type TileKind = "grass" | "stone" | "water" | "path" | "sand" | "wood";
 
 export type ResourceKind = "tree" | "rock" | "pond" | "coal";
 
-export type MobKind = "wolf" | "skeleton" | "bandit";
+export type MobKind =
+  | "wolf" | "boar" | "skeleton" | "bandit" | "orc" | "dragon"
+  | "zombie" | "troll" | "goblin" | "archer" | "necromancer" | "demon";
 
 export type ToolKind = "axe" | "pickaxe" | "rod" | "sword" | "hammer";
 
@@ -60,6 +62,8 @@ export type PlayerState = {
   hp: number;
   maxHp: number;
   gold: number;
+  kills: number;
+  resourcesGathered: number;
   inventory: ItemStack[];
   hotbar: (ItemKind | null)[]; // length 6
   selectedSlot: number;

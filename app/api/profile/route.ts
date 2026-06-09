@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db/client";
+import { ensureSchema } from "@/lib/db/init";
 
 export const runtime = "nodejs";
 
@@ -12,6 +13,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "invalid_wallet" }, { status: 400 });
   }
   try {
+    await ensureSchema();
     const users = await sql`SELECT wallet, tier, paid_demo_at, paid_life_at FROM users WHERE wallet = ${wallet} LIMIT 1`;
     const agents = await sql`
       SELECT agent_id, agent_name, agent_wallet, avatar_seed, created_at

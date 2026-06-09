@@ -26,13 +26,13 @@ export function Game() {
         body: JSON.stringify({
           wallet: address,
           gold: w.player.gold,
-          kills: 0,
-          resources: w.player.inventory.reduce((s, it) => s + it.count, 0),
+          kills: w.player.kills,
+          resources: w.player.resourcesGathered,
           combat_skill: w.player.skills.combat,
           gather_skill: w.player.skills.gathering,
         }),
       }).catch(() => {});
-    }, 30_000);
+    }, 15_000);
     return () => clearInterval(id);
   }, [address]);
 
@@ -131,6 +131,9 @@ export function Game() {
       if (k >= "1" && k <= "6") {
         engineRef.current.selectSlot(parseInt(k, 10) - 1);
       }
+      if (k === "a" || k === "A") {
+        engineRef.current.toggleAgentMode();
+      }
     };
 
     canvas.addEventListener("mousemove", onMove);
@@ -174,6 +177,7 @@ export function Game() {
           <HUD
             snap={hud}
             onSelectSlot={(i) => engineRef.current?.selectSlot(i)}
+            onToggleAgent={() => engineRef.current?.toggleAgentMode()}
             onReset={() => {
               clearSave();
               window.location.reload();

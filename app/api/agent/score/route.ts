@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db/client";
+import { ensureSchema } from "@/lib/db/init";
 import { hashApiKey } from "@/lib/agent/crypto";
 
 export const runtime = "nodejs";
@@ -30,6 +31,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "missing_credentials" }, { status: 400 });
   }
   const hash = hashApiKey(body.api_key);
+  await ensureSchema();
   const rows = await sql`
     SELECT agent_id, agent_wallet, agent_name FROM agents
     WHERE agent_id = ${body.agent_id} AND api_key_hash = ${hash}
@@ -46,9 +48,10 @@ export async function POST(req: Request) {
   const combat = clampInt(body.combat_skill, 1000);
   const gather = clampInt(body.gather_skill, 1000);
 
+  const scoreTotal = gold + kills * 25 + resources * 5;
   await sql`
-    INSERT INTO scores (actor_kind, actor_wallet, display_name, gold, kills, resources, combat_skill, gather_skill)
-    VALUES ('agent', ${agent.agent_wallet}, ${agent.agent_name}, ${gold}, ${kills}, ${resources}, ${combat}, ${gather})
+    INSERT INTO scores (actor_kind, actor_wallet, display_name, gold, kills, resources, combat_skill, gather_skill, score_total)
+    VALUES ('agent', ${agent.agent_wallet}, ${agent.agent_name}, ${gold}, ${kills}, ${resources}, ${combat}, ${gather}, ${scoreTotal})
     ON CONFLICT (actor_wallet) DO UPDATE SET
       gold = EXCLUDED.gold,
       kills = EXCLUDED.kills,
@@ -56,6 +59,7 @@ export async function POST(req: Request) {
       combat_skill = EXCLUDED.combat_skill,
       gather_skill = EXCLUDED.gather_skill,
       display_name = EXCLUDED.display_name,
+      score_total = EXCLUDED.score_total,
       updated_at = NOW()
   `;
   await sql`UPDATE agents SET last_seen_at = NOW() WHERE agent_id = ${body.agent_id}`;

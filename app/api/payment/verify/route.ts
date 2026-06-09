@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { sql } from "@/lib/db/client";
+import { ensureSchema } from "@/lib/db/init";
 
 export const runtime = "nodejs";
 
@@ -21,6 +22,7 @@ export async function POST(req: Request) {
   if (!body.wallet || !WALLET_RE.test(body.wallet)) return NextResponse.json({ error: "invalid_wallet" }, { status: 400 });
   if (body.tier !== "demo" && body.tier !== "lifetime") return NextResponse.json({ error: "invalid_tier" }, { status: 400 });
 
+  await ensureSchema();
   const seen = await sql`SELECT 1 FROM payments WHERE tx_signature = ${body.signature}`;
   if (seen.length > 0) return NextResponse.json({ error: "already_claimed" }, { status: 409 });
 
@@ -50,11 +52,19 @@ export async function POST(req: Request) {
   `;
   const tierCol = body.tier === "demo" ? "paid_demo_at" : "paid_life_at";
   const newTier = body.tier === "lifetime" ? "lifetime" : "demo";
-  await sql.query(
-    `INSERT INTO users (wallet, tier, ${tierCol}) VALUES ($1, $2, NOW())
-     ON CONFLICT (wallet) DO UPDATE SET tier = CASE WHEN users.tier = 'lifetime' THEN 'lifetime' ELSE EXCLUDED.tier END,
-       ${tierCol} = NOW(), updated_at = NOW()`,
-    [body.wallet, newTier],
-  );
+  if (body.tier === "lifetime") {
+    await sql`
+      INSERT INTO users (wallet, tier, paid_life_at) VALUES (${body.wallet}, 'lifetime', NOW())
+      ON CONFLICT (wallet) DO UPDATE SET
+        tier = 'lifetime', paid_life_at = NOW(), updated_at = NOW()
+    `;
+  } else {
+    await sql`
+      INSERT INTO users (wallet, tier, paid_demo_at) VALUES (${body.wallet}, 'demo', NOW())
+      ON CONFLICT (wallet) DO UPDATE SET
+        tier = CASE WHEN users.tier = 'lifetime' THEN 'lifetime' ELSE 'demo' END,
+        paid_demo_at = NOW(), updated_at = NOW()
+    `;
+  }
   return NextResponse.json({ ok: true, tier: newTier, amount_sol: ownerDelta });
 }

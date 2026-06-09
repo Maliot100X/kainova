@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db/client";
+import { ensureSchema } from "@/lib/db/init";
 import {
   avatarSeed,
   avatarUrl,
@@ -40,6 +41,7 @@ export async function POST(req: Request) {
   const { publicKey, secretKeyBase58 } = generateAgentKeypair();
 
   try {
+    await ensureSchema();
     await sql`
       INSERT INTO agents (owner_wallet, agent_id, api_key_hash, agent_wallet, agent_name, avatar_seed, registered_via)
       VALUES (${owner}, ${agentId}, ${apiHash}, ${publicKey}, ${name}, ${seed}, ${via})
@@ -49,8 +51,8 @@ export async function POST(req: Request) {
       ON CONFLICT (wallet) DO NOTHING
     `;
     await sql`
-      INSERT INTO scores (actor_kind, actor_wallet, display_name)
-      VALUES ('agent', ${publicKey}, ${name})
+      INSERT INTO scores (actor_kind, actor_wallet, display_name, score_total)
+      VALUES ('agent', ${publicKey}, ${name}, 0)
       ON CONFLICT (actor_wallet) DO NOTHING
     `;
   } catch (e) {
