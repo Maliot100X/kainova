@@ -1,0 +1,39 @@
+lib/game/render.ts
+  s_12bef40d669687::t_d38c79c47f2f9f 188
+app/api/shop/equipped/route.ts
+  s_12bef40d669687::t_f6fdceb1638bdf 18
+  s_12bef40d669687::t_99bea1de54bf3b 1-17,19
+app/layout.tsx
+  s_12bef40d669687::t_7e13e40f97ac05 5-7,9,11-12,14-15,17-26
+app/api/og/route.tsx
+  s_12bef40d669687::t_8f47ec9a9473a7 1-80
+lib/game/engine.ts
+  s_12bef40d669687::t_3cc5c2d3b06ac3 94
+  s_12bef40d669687::t_41c6ec40dc8eab 341-351
+lib/game/types.ts
+  s_12bef40d669687::t_0891251e540539 64,72-73
+components/game/HUD.tsx
+  s_12bef40d669687::t_782ad20c167a6b 3,8-24,28-29,32,36-37,39-98,101-102,105-106,118-121,125,127-129,135-136,138-142,145-152,163,166-246,263,270-271,273,282-283,287-288
+app/api/player/score/route.ts
+  s_12bef40d669687::t_df23cc6c027320 10-16,21-25,27-29,31-34,36-46
+components/game/Game.tsx
+  s_12bef40d669687::t_22a355d156a96d 210,217-218
+lib/game/world.ts
+  s_12bef40d669687::t_f423763947a927 81,92-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6424b671caf0f8c9d74cca0c93b47d033f29c569",
+  "prompts": {},
+  "sessions": {
+    "s_12bef40d669687": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccda2605-4eb8-4aef-ad49-06072580e7cc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "KAINOVA Bot <kainova-bot@local>"
+    }
+  }
+}
