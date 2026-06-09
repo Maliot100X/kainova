@@ -1,0 +1,49 @@
+components/game/Game.tsx
+  s_12bef40d669687::t_6164e77d0b34ee 8,199-205
+  s_12bef40d669687::t_01f9fd04b01095 17,20-41,179
+app/api/shop/equip/route.ts
+  s_12bef40d669687::t_86072cfca765ff 1-34
+app/api/shop/buy/route.ts
+  s_12bef40d669687::t_0aa48baac6371b 1-48
+app/shop/page.tsx
+  s_12bef40d669687::t_2a08492fdc6eb2 1-24
+components/ShopClient.tsx
+  s_12bef40d669687::t_cdf5b92d59f514 1-190
+lib/db/init.ts
+  s_12bef40d669687::t_435507accf76eb 137,142,147,150-151,154
+  s_12bef40d669687::t_b08ce26129d5fc 72-136,138,141,143-146,149,153
+  s_12bef40d669687::t_85d77aaec3f805 139-140,148,152
+lib/game/render.ts
+  s_12bef40d669687::t_2ea00cb6c3fa42 109-110,118,137-142,192-204
+components/DashboardClient.tsx
+  s_12bef40d669687::t_0314eec6308364 50
+  s_12bef40d669687::t_c18a18710a13e8 249-303
+app/api/shop/items/route.ts
+  s_12bef40d669687::t_0aa48baac6371b 1-28
+app/api/credits/route.ts
+  s_12bef40d669687::t_0aa48baac6371b 1-34
+app/api/agent/list/route.ts
+  s_12bef40d669687::t_9e20711fb3422f 1-35
+app/play/page.tsx
+  s_12bef40d669687::t_b5ab3d45927f98 4,11
+components/Header.tsx
+  s_12bef40d669687::t_3224dee3b5e026 41-43
+app/api/agent/customize/route.ts
+  s_12bef40d669687::t_86072cfca765ff 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ddb11ee4a8af378f1717630a1c27d2adbc17a231",
+  "prompts": {},
+  "sessions": {
+    "s_12bef40d669687": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccda2605-4eb8-4aef-ad49-06072580e7cc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "KAINOVA Bot <kainova-bot@local>"
+    }
+  }
+}
