@@ -5,6 +5,7 @@ import { Engine, HUDSnapshot } from "@/lib/game/engine";
 import { screenToTile, TILE_H, TILE_W, tileToScreen } from "@/lib/game/iso";
 import { render, type Camera } from "@/lib/game/render";
 import { clearSave } from "@/lib/game/save";
+import { WalletButton } from "@/components/WalletButton";
 import { useWallet } from "@/lib/wallet";
 import { HUD } from "./HUD";
 
@@ -13,7 +14,30 @@ export function Game() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const engineRef = useRef<Engine | null>(null);
   const [hud, setHud] = useState<HUDSnapshot | null>(null);
+  const [agents, setAgents] = useState<{ name: string; skin: string; tx: number; ty: number; score: number }[]>([]);
   const { address } = useWallet();
+
+  useEffect(() => {
+    function loadAgents() {
+      fetch("/api/agent/list")
+        .then((r) => r.json())
+        .then((j) => {
+          if (!Array.isArray(j.agents)) return;
+          // Deterministic home tile from wallet chars
+          const placed = j.agents.map((a: { agent_name: string; skin_emoji: string; agent_wallet: string; score_total: number }) => {
+            const hash = a.agent_wallet.split("").reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
+            const tx = 2 + (hash % 34);
+            const ty = 2 + ((hash * 7) % 24);
+            return { name: a.agent_name, skin: a.skin_emoji ?? "🧙", tx, ty, score: a.score_total };
+          });
+          setAgents(placed);
+        })
+        .catch(() => {});
+    }
+    loadAgents();
+    const id = setInterval(loadAgents, 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if (!address) return;
@@ -152,6 +176,7 @@ export function Game() {
           hoverTile,
           canvas!.clientWidth,
           canvas!.clientHeight,
+          agents,
         );
       }
       raf = requestAnimationFrame(loop);
@@ -171,7 +196,13 @@ export function Game() {
 
   return (
     <div className="relative flex flex-col h-[calc(100vh-60px)]">
-      <div ref={containerRef} className="relative flex-1 overflow-hidden">
+      {!address && (
+        <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-[rgba(124,92,255,0.85)] to-[rgba(255,138,214,0.75)] backdrop-blur-sm text-white text-sm py-2 px-4 flex items-center justify-center gap-3">
+          <span>👋 You're watching a live preview — connect your wallet to save progress, earn KAINOVA rewards, and register your agent.</span>
+          <WalletButton />
+        </div>
+      )}
+      <div ref={containerRef} className="relative flex-1 overflow-hidden" style={!address ? { marginTop: "40px" } : {}}>
         <canvas ref={canvasRef} className="block w-full h-full cursor-crosshair" />
         {hud && (
           <HUD

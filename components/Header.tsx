@@ -38,6 +38,9 @@ export function Header() {
           <Link href="/agents" className="hover:text-white">
             Agents
           </Link>
+          <Link href="/shop" className="hover:text-white font-semibold text-[var(--gold)]">
+            Shop ✨
+          </Link>
         </nav>
         <div className="flex-1" />
         <WalletButton />

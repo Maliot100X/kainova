@@ -106,6 +106,8 @@ function drawHpBar(
   ctx.strokeRect(sx - width / 2, sy, width, h);
 }
 
+type AgentHome = { name: string; skin: string; tx: number; ty: number; score: number };
+
 export function render(
   ctx: CanvasRenderingContext2D,
   world: WorldState,
@@ -113,6 +115,7 @@ export function render(
   hoverTile: { x: number; y: number } | null,
   canvasW: number,
   canvasH: number,
+  agentHomes: AgentHome[] = [],
 ) {
   ctx.clearRect(0, 0, canvasW, canvasH);
   // dark gradient backdrop
@@ -129,6 +132,12 @@ export function render(
       const { sx, sy } = tileToScreen(tx, ty, camera.cx, camera.cy, camera.zoom);
       drawDiamond(ctx, sx, sy, TILE_COLORS[kind], TILE_EDGE[kind], camera.zoom);
     }
+  }
+
+  // Agent home bases (rendered as floor markings)
+  for (const ah of agentHomes) {
+    const { sx, sy } = tileToScreen(ah.tx, ah.ty, camera.cx, camera.cy, camera.zoom);
+    drawDiamond(ctx, sx, sy, "rgba(255,206,79,0.12)", "rgba(255,206,79,0.6)", camera.zoom);
   }
 
   // Hover highlight
@@ -178,6 +187,21 @@ export function render(
       const { sx, sy } = tileToScreen(d.px, d.py, camera.cx, camera.cy, camera.zoom);
       drawSprite(ctx, sx, sy + 4, SPRITE_EMOJI.player, 40 * camera.zoom);
     }
+  }
+
+  // Agent home name labels
+  ctx.font = `${Math.round(11 * camera.zoom)}px sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "bottom";
+  for (const ah of agentHomes) {
+    const { sx, sy } = tileToScreen(ah.tx, ah.ty, camera.cx, camera.cy, camera.zoom);
+    // House emoji
+    ctx.font = `${Math.round(22 * camera.zoom)}px serif`;
+    ctx.fillText("🏠", sx, sy - 2 * camera.zoom);
+    // Agent name
+    ctx.font = `bold ${Math.round(10 * camera.zoom)}px sans-serif`;
+    ctx.fillStyle = "rgba(255,206,79,0.95)";
+    ctx.fillText(ah.name.length > 12 ? ah.name.slice(0, 11) + "…" : ah.name, sx, sy - 22 * camera.zoom);
   }
 
   // Realm label, top center

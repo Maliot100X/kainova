@@ -47,6 +47,7 @@ export function DashboardClient() {
       }} />
       <SubscriptionCard profile={profile} address={address} />
       <AirdropCard profile={profile} />
+      <CreditsCard address={address} />
     </div>
   );
 }
@@ -241,6 +242,61 @@ function AirdropCard({ profile }: { profile: Profile | null }) {
         </table>
       ) : (
         <div className="text-[var(--ink-2)] text-sm">No airdrops yet. Climb the leaderboard to earn hourly drops.</div>
+      )}
+    </div>
+  );
+}
+
+export function CreditsCard({ address }: { address: string }) {
+  const [credits, setCredits] = useState<number | null>(null);
+  const [items, setItems] = useState<{ slug: string; name: string; emoji: string; equipped: boolean; rarity: string }[]>([]);
+
+  useEffect(() => {
+    fetch(`/api/shop/items?wallet=${address}`)
+      .then((r) => r.json())
+      .then((j) => {
+        setCredits(j.credits ?? 0);
+        const owned: string[] = j.owned ?? [];
+        const allItems = j.items ?? [];
+        setItems(allItems.filter((i: { slug: string }) => owned.includes(i.slug)));
+      });
+  }, [address]);
+
+  async function toggleEquip(slug: string, equipped: boolean) {
+    await fetch("/api/shop/equip", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ wallet: address, item_slug: slug, equip: !equipped }),
+    });
+    setItems((prev) => prev.map((i) => i.slug === slug ? { ...i, equipped: !equipped } : i));
+  }
+
+  return (
+    <div className="border border-[var(--line)] rounded-xl p-6 bg-[rgba(255,255,255,0.02)] lg:col-span-2">
+      <h3 className="headline text-xl font-bold mb-2">Credits & Inventory</h3>
+      <div className="text-2xl font-bold text-[var(--gold)] tabular-nums mb-4">
+        {credits !== null ? credits.toLocaleString() : "…"} <span className="text-sm font-normal text-[var(--ink-2)]">credits</span>
+      </div>
+      {items.length === 0 ? (
+        <div className="text-[var(--ink-2)] text-sm">No items yet. Visit the <a href="/shop" className="text-[var(--accent)] hover:underline">Shop</a> to buy equipment.</div>
+      ) : (
+        <div className="grid grid-cols-2 gap-2">
+          {items.map((item) => (
+            <div key={item.slug} className="flex items-center gap-2 p-2 rounded-lg border border-[var(--line)] bg-white/3">
+              <span className="text-2xl">{item.emoji}</span>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-semibold truncate">{item.name}</div>
+                <div className="text-[10px] text-[var(--ink-2)] capitalize">{item.rarity}</div>
+              </div>
+              <button
+                onClick={() => toggleEquip(item.slug, item.equipped)}
+                className={`text-[10px] px-2 py-1 rounded font-semibold ${item.equipped ? "bg-[var(--leaf)]/20 text-[var(--leaf)]" : "bg-white/5 text-[var(--ink-2)]"}`}
+              >
+                {item.equipped ? "Equipped" : "Equip"}
+              </button>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
