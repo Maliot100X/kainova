@@ -1,0 +1,67 @@
+lib/agent/crypto.ts
+  s_12bef40d669687::t_7c0c8495d596c6 1-31
+app/api/airdrop/route.ts
+  s_12bef40d669687::t_e3ab4b657547d4 1-49
+app/api/player/score/route.ts
+  s_12bef40d669687::t_f8f189baebc8f3 1-37
+app/api/leaderboard/route.ts
+  s_12bef40d669687::t_b507e6732aae1a 1-22
+app/dashboard/page.tsx
+  s_12bef40d669687::t_25c70a700d4174 1-23
+lib/db/schema.ts
+  s_12bef40d669687::t_c2a572acebc9d9 1-62
+components/DashboardClient.tsx
+  s_12bef40d669687::t_5797266204f122 1-247
+app/agents/page.tsx
+  s_12bef40d669687::t_79135be2229a00 1-40
+vercel.json
+  s_12bef40d669687::t_9b0949e32c89ca 1-5
+components/game/Game.tsx
+  s_12bef40d669687::t_726d095d7c848f 8
+  s_12bef40d669687::t_16b69c3bd6e96a 16-37
+app/api/cron/airdrop/route.ts
+  s_12bef40d669687::t_00e05c75c32f24 1-17
+app/live/page.tsx
+  s_12bef40d669687::t_c52da0c8d23079 1-45
+SKILL.md
+  s_12bef40d669687::t_e2b4be560274a1 1-102
+components/Header.tsx
+  s_12bef40d669687::t_4ba0d8d2d36f53 32-40
+lib/db/client.ts
+  s_12bef40d669687::t_e2b43179c0c64d 13,18
+  s_12bef40d669687::t_a1170b504485db 1-12,14-17,19
+app/api/payment/verify/route.ts
+  s_12bef40d669687::t_faf3d913008ab8 1-60
+components/LeaderboardClient.tsx
+  s_12bef40d669687::t_64b768eead9f32 1-99
+app/api/agent/score/route.ts
+  s_12bef40d669687::t_ec0b8815472287 1-63
+app/leaderboard/page.tsx
+  s_12bef40d669687::t_d65813f6926e62 1-31
+app/api/db/init/route.ts
+  s_12bef40d669687::t_1b87491ce38447 1-21
+app/api/agent/register/route.ts
+  s_12bef40d669687::t_e636c6f93b695e 1-71
+package.json
+  s_12bef40d669687::t_0a94d62e923285 11,15
+app/SKILL.md/route.ts
+  s_12bef40d669687::t_636f663cfc0d85 1-12
+app/api/profile/route.ts
+  s_12bef40d669687::t_fee71b8c0ff858 1-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "a2c4392c19a871bdd6bffd6509723c55737b44ff",
+  "prompts": {},
+  "sessions": {
+    "s_12bef40d669687": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccda2605-4eb8-4aef-ad49-06072580e7cc",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "KAINOVA Bot <kainova-bot@local>"
+    }
+  }
+}
